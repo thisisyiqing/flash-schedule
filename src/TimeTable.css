@@ -111,19 +111,20 @@
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 } */
+
 .container{
     margin-top: 50px;
     margin-left: 100px;
+    margin-bottom: 50px;
 }
 .table-bordered td, .table-bordered th {
-    
-    width: 150px;
+    width: 200px;
     border: 1px solid #dee2e6;
     text-align: center;
 }
 
 .table td, .table th {
-    padding: .25rem;
+    padding: 3px;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
