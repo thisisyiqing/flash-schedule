@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Card } from 'antd';
 import './TimeTable.css';
 
 export default class TimeTable extends Component {
@@ -11,33 +10,6 @@ export default class TimeTable extends Component {
             localDay: [],
             cardInfo: [],
         };
-        
-        var time = this.props.time
-        console.log(time)
-        time.map((classTime, index) => {
-            console.log(classTime.days)
-            if (classTime.days.indexOf('M') !== -1) {
-                this.isMonday(index)
-            }
-             console.log(this.state.cardInfo)
-            if (classTime.days.indexOf('W') !== -1) {
-                this.isWednesday(index)
-            }
-             console.log(this.state.cardInfo)
-            if (classTime.days.indexOf('F') !== -1) {
-                this.isFriday(index)
-            }
-             console.log(this.state.cardInfo)
-            if (classTime.days.indexOf('Th') !== -1) {
-                this.isThursday(index)
-            }
-             console.log(this.state.cardInfo)
-            if (classTime.days.indexOf('T') !== -1 &&  classTime.days.indexOf('T') !== classTime.days.indexOf('Th')) {
-                this.isTuesday(index)
-            }
-             console.log(this.state.cardInfo)
-            return classTime
-        })
     }
 
     static getDerivedStateFromProps(props) {
@@ -58,77 +30,44 @@ export default class TimeTable extends Component {
         return null;
     }
 
-    isMonday(index) {
-        console.log('i am here')
-        this.setState({
-            // cardInfo: [{ left: '100px', top: '300px', title: this.props.classes[index] }]
-            cardInfo: this.state.cardInfo.concat([1])
+    componentDidMount() {
+        var time = this.props.time
+        let list = [];
+        time.map((classTime, index) => {
+            var time1 = 'December 7, 2020 ' + classTime.lectureFrom
+            var Date1 = new Date(time1)
+            var time2 = 'December 7, 2020 ' + classTime.lectureTo
+            var Date2 = new Date(time2)
+            var Height = ((Date2.getHours() - Date1.getHours()) * 60 + Date2.getMinutes() - Date1.getMinutes()) * 0.92485 + 'px'
+            var Top =  (Date1.getHours() - 8) * 27.7455 * 2 + (Date1.getMinutes() - 30) / 30 * 27.7455 - 555.5 + 'px'
+            
+            if (classTime.days.match(/M/)) {
+                list.push({ left: '151px', top: Top, height: Height, title: this.props.classes[index] });
+            }
+            if (classTime.days.match(/T(?!h)/)) {
+                list.push({ left: '301px', top: Top, height: Height, title: this.props.classes[index] });
+            }
+            if (classTime.days.match(/W/)) {
+                list.push({ left: '451px', top: Top, height: Height, title: this.props.classes[index] });
+            }
+            if (classTime.days.match(/Th/)) {
+                list.push({ left: '601px', top: Top, height: Height, title: this.props.classes[index] });
+            }
+            if (classTime.days.match(/F/)) {
+                list.push({ left: '751px', top: Top, height: Height, title: this.props.classes[index] });
+            }
+            return classTime
         })
-        console.log(this.state.cardInfo)
+        this.setState({ cardInfo: list });
     }
-
-    isTuesday(index) {
-        this.setState({
-            cardInfo: this.state.cardInfo.concat([{ left: '150px', top: '300px', title: this.props.classes[index] }])
-        })
-    }
-
-    isWednesday(index){
-        this.setState({
-            cardInfo: this.state.cardInfo.concat([{ left: '200px', top: '300px', title: this.props.classes[index] }])
-        })
-    }
-
-    isThursday(index){
-        this.setState({
-            cardInfo: this.state.cardInfo.concat([{ left: '250px', top: '300px', title: this.props.classes[index] }])
-        })
-    }
-
-    isFriday(index){
-        this.setState({
-            cardInfo: this.state.cardInfo.concat([{ left: '300px', top: '300px', title: this.props.classes[index] }])
-        })
-    }
-
-    // componentDidMount() {
-    //     var time = this.props.time
-    //     console.log(time)
-    //     time.map((classTime, index) => {
-    //         console.log(classTime.days)
-    //         if (classTime.days.indexOf('M') !== -1) {
-    //             this.isMonday(index)
-    //         }
-    //          console.log(this.state.cardInfo)
-    //         if (classTime.days.indexOf('W') !== -1) {
-    //             this.isWednesday(index)
-    //         }
-    //          console.log(this.state.cardInfo)
-    //         if (classTime.days.indexOf('F') !== -1) {
-    //             this.isFriday(index)
-    //         }
-    //          console.log(this.state.cardInfo)
-    //         if (classTime.days.indexOf('Th') !== -1) {
-    //             this.isThursday(index)
-    //         }
-    //          console.log(this.state.cardInfo)
-    //         if (classTime.days.indexOf('T') !== -1 &&  classTime.days.indexOf('T') !== classTime.days.indexOf('Th')) {
-    //             this.isTuesday(index)
-    //         }
-    //          console.log(this.state.cardInfo)
-    //         return classTime
-    //     })
-    // }
 
     render() {
-        // var classes = this.props.classes
-
         var classCard = this.state.cardInfo.map((card, index) => {
             const newKey = index + 50
             return (
-                <Card key={newKey} title={card.title} bordered={false} style={{ position: 'absolute', marginLeft: card.left, marginTop: card.top, width: '50px' }}>
-                    <p>card.title</p>
-                </Card>
+                <div key={newKey} style={{ position: 'absolute', marginLeft: card.left, marginTop: card.top, width: '150px', height: card.height, lineHeight: card.height, zIndex: '10', backgroundColor: '#f2ecde', textAlign: 'center'}}>
+                    <p>{card.title}</p>
+                </div>
             )
         });
 
@@ -143,12 +82,12 @@ export default class TimeTable extends Component {
         var grid = this.state.localTime.map((localTime, index) => {
             return (
                 <tr key={index}>
-                    <td className="align-middle">{localTime}</td>
-                    <td className="bg-light-gray" style={{ backgroundColor: this.state.MondayColor }}></td>
-                    <td className="bg-light-gray" style={{ backgroundColor: this.state.TuesdayColor }}></td>
-                    <td className="bg-light-gray" style={{ backgroundColor: this.state.WednesdayColor }}></td>
-                    <td className="bg-light-gray" style={{ backgroundColor: this.state.ThursdayColor }}></td>
-                    <td className="bg-light-gray" style={{ backgroundColor: this.state.FridayColor }}></td>
+                    <td>{localTime}</td>
+                    <td style={{ backgroundColor: this.state.MondayColor }}></td>
+                    <td style={{ backgroundColor: this.state.TuesdayColor }}></td>
+                    <td style={{ backgroundColor: this.state.WednesdayColor }}></td>
+                    <td style={{ backgroundColor: this.state.ThursdayColor }}></td>
+                    <td style={{ backgroundColor: this.state.FridayColor }}></td>
                 </tr>
             )
         }
@@ -158,8 +97,8 @@ export default class TimeTable extends Component {
             <div className="container">
                 <table className="table table-bordered text-center">
                     <thead>
-                        <tr className="bg-light-gray">
-                            <th className="align-middle">Schedule {this.props.index}</th>
+                        <tr>
+                            <th>Schedule {this.props.index}</th>
                             {gridTitle}
                         </tr>
                     </thead>
@@ -170,389 +109,5 @@ export default class TimeTable extends Component {
                 {classCard}
             </div>
         )
-
-        // return (
-        //     <div className="container">
-        //         <div className="table-responsive">
-        //             <table className="table table-bordered text-center">
-        //                 <thead>
-        //                     <tr className="bg-light-gray"> 
-        //                         <th className="align-middle">Schedule {this.props.index}</th>
-        //                         <th className="text-uppercase">Monday</th>
-        //                         <th className="text-uppercase">Tuesday</th>
-        //                         <th className="text-uppercase">Wednesday</th>
-        //                         <th className="text-uppercase">Thursday</th>
-        //                         <th className="text-uppercase">Friday</th>
-        //                     </tr>
-        //                 </thead>
-        //                 <tbody>
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[0]}</td>
-        //                         <td>
-        //                             <span className="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">Dance</span>
-        //                             <div className="margin-10px-top font-size14">Room TBA</div>
-        //                         </td>
-        //                         <td>
-        //                             <span className="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-        //                             <div className="font-size13 text-light-gray">Marta Healy</div>
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[1]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[2]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[3]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[4]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[5]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[6]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[7]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[8]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[9]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[10]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[11]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[12]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[13]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[14]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[15]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[16]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[17]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-
-        //                     <tr>
-        //                         <td className="align-middle">{this.state.localTime[18]}</td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                         <td className="bg-light-gray">
-
-        //                         </td>
-        //                     </tr>
-        //                 </tbody>
-        //             </table>
-        //         </div>
-        //     </div>
-        // )
     }
-
 }

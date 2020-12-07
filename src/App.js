@@ -3,6 +3,8 @@ import { Button, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import './App.css';
 import TimeTable from './TimeTable';
+import { createFromIconfontCN } from '@ant-design/icons';
+
 
 export default class App extends Component {
 
@@ -12,22 +14,29 @@ export default class App extends Component {
       {
         id: 1,
         classes: ['CSE 351 A', 'CSE 311 B'],
-        time: [{ days: 'MWF', lecture: '11:30-12:20' }, { days: 'TTh', lecture: '13:30-14:20' }],
+        time: [{ days: 'MWF', lectureFrom: '11:30:00', lectureTo:'12:20.00' }, { days: 'TTh', lectureFrom: '13:30:00', lectureTo:'14:20.00'}],
         description: 'Schedule 1',
         show: false
       },
       {
         id: 2,
         classes: ['CSE 311 A', 'CSE 351 B'],
-        time: [{ days: 'MWF', lecture: '8:30-9:20' }, { days: 'Th', lecture: '16:30-17:20' }],
+        time: [{ days: 'MWF', lectureFrom: '08:30:00', lectureTo:'09:20.00'}, { days: 'Th', lectureFrom: '16:30:00', lectureTo:'17:40.00' }],
         description: 'Schedule 2',
         show: false
       },
       {
         id: 3,
         classes: ['CSE 311 A', 'CSE 351 B'],
-        time: [{ days: 'MF', lecture: '15:00-16:20' }, { days: 'T', lecture: '8:00-9:20' }],
+        time: [{ days: 'MF', lectureFrom: '15:00:00', lectureTo:'16:20.00'}, { days: 'T', lectureFrom: '08:30:00', lectureTo:'10:00.00'}],
         description: 'Schedule 3',
+        show: false
+      },
+      {
+        id: 4,
+        classes: ['MATH 308 A', 'CSE 351 B'],
+        time: [{ days: 'MF', lectureFrom: '15:00:00', lectureTo:'16:20.00'}, { days: 'T', lectureFrom: '08:30:00', lectureTo:'10:00.00'}],
+        description: 'Schedule 4',
         show: false
       }
     ]
@@ -36,6 +45,8 @@ export default class App extends Component {
       timeZone: 'PST'
     };
   }
+
+  
 
   displaySchedule(index) {
     const myIndex = Number(index)
@@ -62,9 +73,14 @@ export default class App extends Component {
   }
 
   render() {
+
+    var IconFont = createFromIconfontCN({
+      scriptUrl: '//at.alicdn.com/t/font_2251591_y07tf1n2ppg.js',
+    });
+    
     var scheduleButtons = this.state.schedules.map((schedule) => {
       return (
-        <Button key={schedule.id} type="primary" size="large" onClick={() => this.displaySchedule(schedule.id)}>{schedule.description}</Button>
+        <Button key={schedule.id} type="primary" size="large" onClick={() => this.displaySchedule(schedule.id)} style={{backgroundColor: '#d3b17d', border: '1px solid #d3b17d'}} icon={<IconFont type="icon-fix-full"/>}>{schedule.description}</Button>
       )
     }
     );
@@ -72,8 +88,8 @@ export default class App extends Component {
     var scheduleChoices = this.state.schedules.map((schedule) => {
       const schedulekey = schedule.id + 100
       return (
-        <div key={schedulekey} style={schedule.show ? { display: 'flex' } : { display: 'none' }}>
-          <TimeTable classes={schedule.classes} time={schedule.time} index={schedule.id} timeZone={this.state.timeZone} />
+        <div key={schedulekey} style={schedule.show ? { display: 'flex', marginLeft: '75px'} : { display: 'none' }}>
+          <TimeTable classes={schedule.classes} time={schedule.time} index={schedule.id} timeZone={this.state.timeZone}/>
         </div>
       )
     }
@@ -90,15 +106,19 @@ export default class App extends Component {
       </Menu>
     )
 
+    
+
     return (
       <div>
-        <Dropdown overlay={menu}>
-          <Button>
-            Select Your Time Zone <DownOutlined />
-          </Button>
-        </Dropdown>
+        <div style={{marginLeft: '50px', marginTop: '20px'}}>
+          <Dropdown overlay={menu}>
+              <Button>
+                Select Your Time Zone <DownOutlined />
+              </Button>
+          </Dropdown>
+        </div>
         <div className='choices'>{scheduleButtons}</div>
-        {scheduleChoices}
+          {scheduleChoices}
       </div>
     );
   }
