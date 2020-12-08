@@ -74,7 +74,7 @@ export default class TimeTable extends Component {
         var gridTitle = this.state.localDay.map((day, index) => {
             const newKey = index + 100
             return (
-                <th key={newKey} className="text-uppercase">{day}</th>
+                <th key={newKey}>{day}</th>
             )
         }
         );
@@ -83,11 +83,11 @@ export default class TimeTable extends Component {
             return (
                 <tr key={index}>
                     <td>{localTime}</td>
-                    <td style={{ backgroundColor: this.state.MondayColor }}></td>
-                    <td style={{ backgroundColor: this.state.TuesdayColor }}></td>
-                    <td style={{ backgroundColor: this.state.WednesdayColor }}></td>
-                    <td style={{ backgroundColor: this.state.ThursdayColor }}></td>
-                    <td style={{ backgroundColor: this.state.FridayColor }}></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             )
         }
