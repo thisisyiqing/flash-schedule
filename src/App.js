@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Button, Menu, Dropdown, Card } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import './App.css';
+import 'antd/dist/antd.css';
 import TimeTable from './TimeTable';
 import { createFromIconfontCN } from '@ant-design/icons';
 import axios from 'axios';
-
 
 export default class App extends Component {
 
@@ -78,8 +77,6 @@ export default class App extends Component {
       })
   }
 
-
-
   changeCTimeZone() {
     this.setState({
       timeZone: 'CST'
@@ -91,8 +88,6 @@ export default class App extends Component {
       timeZone: 'PST'
     });
   }
-
-
 
   timer = 0;
   delay = 200;
@@ -147,7 +142,6 @@ export default class App extends Component {
       let newKey = schedule.id + 50
       return (
         <div key={newKey}>
-
           <Button key={schedule.id} type="primary" size="large" onClick={() => this.handleClick(schedule.id)}
             style={schedule.show ? { backgroundColor: '#b8860b', border: '1px solid #b8860b' } : { backgroundColor: '#d3b17d', border: '1px solid #d3b17d' }} icon={<IconFont type={schedule.pinned ? "icon-fix-full" : "icon-fix"} onDoubleClick={() => this.handleDoubleClick(schedule.id)} />}>
             {schedule.description}</Button>
@@ -189,10 +183,9 @@ export default class App extends Component {
         return (
           <Card key={newKey} title="Your Pinned Schedule" style={{ width: "250px", position: "fixed", marginLeft: "1050px", marginTop: "-650px" }}>{item}</Card>
         )
-      } 
+      }
       return null
-    }
-    );
+    });
 
     var menu = (
       <Menu>
@@ -206,20 +199,19 @@ export default class App extends Component {
     )
 
     return (
-      <div style={{ padding: '20px'}}>
-        <div style={{ marginLeft: '50px'}}>
+      <div style={{ padding: '20px' }}>
+        <div style={{ marginLeft: '50px' }}>
           <Dropdown overlay={menu}>
             <Button>
               Select Your Time Zone <DownOutlined />
             </Button>
           </Dropdown>
         </div>
-        <div className='choices'>{scheduleButtons}</div>
+        <div style={{ width: "75%", display: "flex", justifyContent: "space-around", marginTop: "30px" }}>
+          {scheduleButtons}</div>
         <div>{scheduleChoices}</div>
         <div>{pinnedSchedule}</div>
-
       </div>
     );
   }
 }
-
