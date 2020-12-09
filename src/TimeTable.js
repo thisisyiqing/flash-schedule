@@ -5,13 +5,20 @@ export default class TimeTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            /** The time zone that the user chooses, and the default is PST */
             timeZone: this.props.timeZone,
+            /** The corresponding time of the time zone */
             localTime: [],
+            /** The corresponding days of the time zone */
             localDay: [],
+            /** The classes' display position and title information */
             cardInfo: [],
         };
     }
 
+    /**
+     * Changes the local time and days display if the props' timeZone is changed
+     */
     static getDerivedStateFromProps(props) {
         if (props.timeZone === 'PST') {
             return {
@@ -28,6 +35,7 @@ export default class TimeTable extends Component {
         return null;
     }
 
+    /** Calculates the display position of the classes and stores the position and title of each class in the cardInfo list */
     componentDidMount() {
         var time = this.props.time
         let list = [];
@@ -60,6 +68,7 @@ export default class TimeTable extends Component {
     }
 
     render() {
+        /** Displays each class on a card in the time table */
         var classCard = this.state.cardInfo.map((card, index) => {
             const newKey = index + 50
             return (
@@ -69,6 +78,7 @@ export default class TimeTable extends Component {
             )
         });
 
+        /** Displays the days on the grid */
         var gridTitle = this.state.localDay.map((day, index) => {
             const newKey = index + 100
             return (
@@ -76,6 +86,7 @@ export default class TimeTable extends Component {
             )
         });
 
+        /** Displays the time on the grid */
         var grid = this.state.localTime.map((localTime, index) => {
             return (
                 <tr key={index}>
@@ -91,6 +102,7 @@ export default class TimeTable extends Component {
 
         return (
             <div className="container">
+                {/* The structure of the table */}
                 <table className="table table-bordered text-center">
                     <thead>
                         <tr>

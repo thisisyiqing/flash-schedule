@@ -10,7 +10,9 @@ export default class App extends Component {
 
   constructor(props) {
     super(props);
+    /** The array that stores all the possible schedules */
     var schedules = []
+    /** The test array */
     // var schedules = [
     //   {
     //     id: 1,
@@ -67,6 +69,9 @@ export default class App extends Component {
     };
   }
 
+  /**
+   * Receives possible schedule information and stores it into the schedules array
+   */
   componentDidMount() {
     axios(`/schedules`)
       .then(res => {
@@ -89,6 +94,9 @@ export default class App extends Component {
     });
   }
 
+  /**
+   * Sets a delay to handleClick to prevent confusion with handleDoubleClick
+   */
   timer = 0;
   delay = 200;
   prevent = false;
@@ -109,6 +117,10 @@ export default class App extends Component {
     this.pinSchedule(index);
   }
 
+  /**
+   * Displays the schedule's timetable after clicking its associated button
+   * @param  index   the index of the chosen schedule
+   */
   displaySchedule(index) {
     const myIndex = Number(index)
     this.setState({
@@ -121,6 +133,10 @@ export default class App extends Component {
     });
   }
 
+  /**
+   * Pins the schedule after double-clicking the pin icon on its associated button
+   * @param  index   the index of the pinned schedule
+   */
   pinSchedule(index) {
     const myIndex = Number(index)
     this.setState({
@@ -134,10 +150,12 @@ export default class App extends Component {
   }
 
   render() {
+    /** Imports the pin icons from IconFont */
     var IconFont = createFromIconfontCN({
       scriptUrl: '//at.alicdn.com/t/font_2251591_y07tf1n2ppg.js',
     });
 
+    /** Displays buttons for all the possible schedules */
     var scheduleButtons = this.state.schedules.map((schedule) => {
       let newKey = schedule.id + 50
       return (
@@ -150,6 +168,7 @@ export default class App extends Component {
     }
     );
 
+    /** Displays the time table for the chosen schedule */
     var scheduleChoices = this.state.schedules.map((schedule) => {
       const schedulekey = schedule.id + 100
       return (
@@ -160,6 +179,7 @@ export default class App extends Component {
     }
     );
 
+    /** Displays the pinned schedule's information on the right */
     var pinnedSchedule = this.state.schedules.map((schedule, index) => {
       if (schedule.pinned) {
         var item = schedule.classes.map((oneClass, index) => {
@@ -187,6 +207,7 @@ export default class App extends Component {
       return null
     });
 
+    /** Items in the time zone dropdown */
     var menu = (
       <Menu>
         <Menu.Item onClick={() => this.changeSTimeZone()}>
