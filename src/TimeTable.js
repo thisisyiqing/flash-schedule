@@ -102,7 +102,7 @@ export default class TimeTable extends Component {
 
         return (
             <div className="container">
-                {/* The structure of the table */}
+                {/* The structure of the time table */}
                 <table className="table table-bordered text-center">
                     <thead>
                         <tr>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Menu, Dropdown, Card } from 'antd';
+import { Button, Menu, Dropdown, Card, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import TimeTable from './TimeTable';
@@ -65,7 +65,9 @@ export default class App extends Component {
     // ]
     this.state = {
       schedules: schedules,
-      timeZone: 'PST'
+      timeZone: 'PST',
+      inputClass: '',
+      selectedCourse: []
     };
   }
 
@@ -73,13 +75,67 @@ export default class App extends Component {
    * Receives possible schedule information and stores it into the schedules array
    */
   componentDidMount() {
+    this.getSchedules();
+    this.getSelectedCourses();
+  }
+
+  getSchedules() {
     axios(`/schedules`)
       .then(res => {
         console.log(res.data);
         this.setState({
-          schedules: res.data.schedules
+          schedules: res.data.schedules,
         });
       })
+  }
+
+  getSelectedCourses() {
+    axios(`/selectedCourses`)
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          selectedCourse: res.data.sc
+        });
+      })
+  }
+
+  addCourse() {
+    axios(`/addCourse=` + this.state.inputClass)
+      .then(res => {
+        console.log(res.data.success);
+        if (!res.data.success) {
+          alert("Add course failed, please check your input");
+        } else {
+          window.location.reload(true);
+        }
+      })
+  }
+
+  removeCourse(course) {
+    console.log(course);
+    axios(`/removeCourse=` + course)
+      .then(res => {
+        console.log(res.data.success);
+        if (!res.data.success) {
+          alert("remove course failed, please check your input");
+        } else {
+          window.location.reload(true);
+        }
+      })
+  }
+
+  inputHandler = (e) => {
+    this.setState({
+      inputClass: e.target.value
+    });
+  }
+
+  addHandler() {
+    this.addCourse();
+  }
+
+  removeHandler = (e) => {
+    this.removeCourse(e.target.parentElement.firstChild.textContent);
   }
 
   changeCTimeZone() {
@@ -201,7 +257,10 @@ export default class App extends Component {
         })
         var newKey = index + 200
         return (
-          <Card key={newKey} title="Your Pinned Schedule" style={{ width: "250px", position: "fixed", marginLeft: "1050px", marginTop: "-650px" }}>{item}</Card>
+          <div key={newKey}>
+            <p style={{ position: "absolute", marginLeft: "1105px", marginTop: "355px", fontSize: '20px' }}>Your Pinned Schedule</p>
+            <Card style={{ width: "250px", position: "absolute", marginLeft: "1100px", marginTop: "400px" }}>{item}</Card>
+          </div>
         )
       }
       return null
@@ -219,6 +278,29 @@ export default class App extends Component {
       </Menu>
     )
 
+    var courseInput = (
+      <div style={{marginTop: '-15px'}}>
+        <Input placeholder="CSE143A/CSE143AA" onChange={this.inputHandler} style={{ width: '180px', height: '35px' }} />
+        <Button onClick={() => this.addHandler()} style={{ height: '35px', backgroundColor: '#d3b17d', color: 'white', border: '1px solid #d3b17d', marginBottom: '30px', marginLeft: '2px' }}>Add</Button>
+      </div>
+    )
+
+    var selectedCourses = (
+      <div>
+        <p style={{ fontSize: '20px', marginLeft: '2px' }}>Selected Courses</p>
+        <Card style={{ marginTop: '-10px' }}>
+          {this.state.selectedCourse.map((course) => {
+            return (
+              <div key={course} style={{ padding: '5px', marginLeft: '10px' }}>
+                {course}
+                <button onClick={this.removeHandler} style={{ width: '75px', height: '30px', border: '1px solid white', marginLeft: '30px', borderRadius: '2px' }}>{"Remove"}</button>
+              </div>
+            )
+          })}
+        </Card>
+      </div>
+    )
+
     return (
       <div style={{ padding: '20px' }}>
         <div style={{ marginLeft: '50px' }}>
@@ -228,10 +310,15 @@ export default class App extends Component {
             </Button>
           </Dropdown>
         </div>
+        <div>{pinnedSchedule}</div>
+        <div style={{ position: 'absolute', marginLeft: '1080px', marginTop: '-30px', padding: '20px' }}>
+          {courseInput}
+          <div>{selectedCourses}</div>
+        </div>
         <div style={{ width: "75%", display: "flex", justifyContent: "space-around", marginTop: "30px" }}>
           {scheduleButtons}</div>
         <div>{scheduleChoices}</div>
-        <div>{pinnedSchedule}</div>
+
       </div>
     );
   }
