@@ -72,8 +72,9 @@ export default class App extends Component {
   }
 
   /**
-   * Receives possible schedule information and stores it into the schedules array
-   */
+   * Receives possible schedule information and stores it into the schedules array
+   * Receives selected courses information and stores it into the selectedCourse array
+   */
   componentDidMount() {
     this.getSchedules();
     this.getSelectedCourses();
@@ -278,13 +279,15 @@ export default class App extends Component {
       </Menu>
     )
 
+     /** Displays the add course input box and the Add button on the top right corner*/
     var courseInput = (
       <div style={{marginTop: '-15px'}}>
         <Input placeholder="CSE143A/CSE143AA" onChange={this.inputHandler} style={{ width: '180px', height: '35px' }} />
         <Button onClick={() => this.addHandler()} style={{ height: '35px', backgroundColor: '#d3b17d', color: 'white', border: '1px solid #d3b17d', marginBottom: '30px', marginLeft: '2px' }}>Add</Button>
       </div>
     )
-
+    
+    /** Displays a list of selected courses on the right under the input box */
     var selectedCourses = (
       <div>
         <p style={{ fontSize: '20px', marginLeft: '2px' }}>Selected Courses</p>
